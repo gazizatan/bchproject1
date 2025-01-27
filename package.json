@@ -1,13 +1,30 @@
 {
   "name": "blockchain",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "scripts.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "private": true,
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ethers": "^6.13.5",
+    "express": "^4.21.2",
     "web3": "^4.16.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gazizatan/bchproject1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/gazizatan/bchproject1/issues"
+  },
+  "homepage": "https://github.com/gazizatan/bchproject1#readme",
+  "description": ""
 }

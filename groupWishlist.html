@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Wishlist</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="snow-container"></div>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="profile.html">Profile</a>
+  <a href="personalWishlist.html">Personal Wishlist</a>
+</nav>
+
+<div class="container">
+  <h1>Your Group Wishlist</h1>
+  <button id="joinGroupBtn">Join Group</button>
+  <button id="addGroupItemBtn">Add Group Item</button>
+
+  <ul id="groupWishlist">
+    <!-- Wishlist items will be dynamically inserted here -->
+  </ul>
+</div>
+
+<script src="scripts.js"></script>
+<script>
+  let web3;
+  let accounts;
+  let contract;
+  const contractAddress = 'YOUR_CONTRACT_ADDRESS_HERE'; // Replace with your deployed contract address
+  const abi = [ /* Your ABI here */ ];
+
+  document.getElementById('joinGroupBtn').addEventListener('click', joinGroup);
+  document.getElementById('addGroupItemBtn').addEventListener('click', addItem);
+
+  async function initWeb3() {
+    if (typeof window.ethereum !== 'undefined') {
+      web3 = new Web3(window.ethereum); // Initialize Web3 with MetaMask's provider
+      await window.ethereum.enable(); // Request access to accounts
+      accounts = await web3.eth.getAccounts(); // Get user account
+      contract = new web3.eth.Contract(abi, contractAddress); // Create contract instance
+    } else {
+      alert('Please install MetaMask!');
+    }
+  }
+
+  async function joinGroup() {
+    await initWeb3();
+
+    contract.methods.joinGroup().send({ from: accounts[0] })
+            .on('transactionHash', function (hash) {
+              console.log('Transaction Hash:', hash); // Log the hash for easy debugging
+              alert('Transaction sent. Waiting for confirmation...');
+            })
+            .on('receipt', function (receipt) {
+              console.log('Receipt:', receipt); // Log receipt to see if transaction was successful
+              alert('You have successfully joined the group!');
+            })
+            .on('error', function (error) {
+              console.error('Error:', error); // Log any errors that occur
+              alert('Error joining the group.');
+            });
+  }
+
+  async function addItem() {
+    const item = prompt('Enter the item to add to the group wishlist:');
+    if (item) {
+      await contract.methods.addItem(item).send({ from: accounts[0] })
+              .on('transactionHash', function (hash) {
+                console.log('Transaction Hash:', hash); // Log the hash for easy debugging
+                alert('Transaction sent. Waiting for confirmation...');
+              })
+              .on('receipt', function (receipt) {
+                console.log('Receipt:', receipt); // Log receipt to see if transaction was successful
+                alert('Item added to the wishlist!');
+                updateWishlist();
+              })
+              .on('error', function (error) {
+                console.error('Error:', error); // Log any errors that occur
+                alert('Error adding item.');
+              });
+    }
+  }
+
+  async function updateWishlist() {
+    const wishlist = await contract.methods.getWishlist().call();
+    const wishlistElement = document.getElementById('groupWishlist');
+    wishlistElement.innerHTML = ''; // Clear current list
+    wishlist.forEach(item => {
+      const listItem = document.createElement('li');
+      listItem.textContent = item;
+      wishlistElement.appendChild(listItem);
+    });
+  }
+
+  // Call this function when the page loads to display the current wishlist
+  window.addEventListener('load', updateWishlist);
+</script>
+</body>
+</html>

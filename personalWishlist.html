@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Wishlist</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="snow-container"></div>
+
+<nav>
+  <a href="Main.html">Home</a>
+  <a href="profile.html">Profile</a>
+  <a href="groupWishlist.html">Group Wishlist</a>
+</nav>
+
+<div class="container">
+  <h1>Your Personal Wishlist</h1>
+  <button id="addItemBtn">Add Item</button>
+
+  <ul id="personalWishlist">
+    <!-- Wishlist items will be dynamically inserted here -->
+  </ul>
+</div>
+
+<script>
+  // Snowflakes script
+  function createSnowflakes() {
+    const snowContainer = document.querySelector('.snow-container');
+    const numSnowflakes = 50;
+
+    for (let i = 0; i < numSnowflakes; i++) {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      snowflake.style.left = Math.random() * 100 + 'vw';
+      snowflake.style.animationDuration = Math.random() * 10 + 5 + 's';
+      snowContainer.appendChild(snowflake);
+    }
+  }
+
+  window.addEventListener('load', createSnowflakes);
+
+  // Handle adding items to the wishlist
+  document.getElementById('addItemBtn').addEventListener('click', function() {
+    const item = prompt('Enter your wishlist item:');
+    if (item) {
+      const listItem = document.createElement('li');
+      listItem.textContent = item;
+      document.getElementById('personalWishlist').appendChild(listItem);
+    }
+  });
+</script>
+</body>
+</html>

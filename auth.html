@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Register</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="snow-container"></div>
+
+<nav>
+    <a href="Main.html">Home</a>
+    <a href="profile.html">Profile</a>
+</nav>
+
+<div class="container">
+    <h1>Login / Register</h1>
+    <button id="connectBtn">Connect MetaMask</button>
+
+    <div id="loginArea" style="display: none;">
+        <h3>Welcome, <span id="username"></span></h3>
+        <button onclick="window.location.href='profile.html'">Go to Profile</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+<script>
+    let web3;
+    let accounts;
+
+    document.getElementById('connectBtn').addEventListener('click', connectMetaMask);
+
+    async function connectMetaMask() {
+        if (typeof window.ethereum !== 'undefined') {
+            web3 = new Web3(window.ethereum);
+            await window.ethereum.enable();
+            accounts = await web3.eth.getAccounts();
+            document.getElementById('loginArea').style.display = 'block';
+            document.getElementById('username').textContent = accounts[0];
+        } else {
+            alert('Please install MetaMask to use this DApp.');
+        }
+    }
+</script>
+</body>
+</html>

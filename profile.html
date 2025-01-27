@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Profile</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="snow-container"></div>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="auth.html">Login</a>
+  <a href="personalWishlist.html">Personal Wishlist</a>
+  <a href="groupWishlist.html">Group Wishlist</a>
+</nav>
+
+<div class="container">
+  <h1>Your Profile</h1>
+  <p><strong>Ethereum Address:</strong> <span id="address">0xYourAddressHere</span></p>
+
+  <h2>Your Wishlist</h2>
+  <ul id="wishlist">
+    <!-- Wishlist items will be dynamically inserted here -->
+  </ul>
+
+  <button onclick="window.location.href='personalWishlist.html'">Go to Personal Wishlist</button>
+  <button onclick="window.location.href='groupWishlist.html'">Go to Group Wishlist</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+<script>
+  // Snowflakes script
+  function createSnowflakes() {
+    const snowContainer = document.querySelector('.snow-container');
+    const numSnowflakes = 50;
+
+    for (let i = 0; i < numSnowflakes; i++) {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      snowflake.style.left = Math.random() * 100 + 'vw';
+      snowflake.style.animationDuration = Math.random() * 10 + 5 + 's';
+      snowContainer.appendChild(snowflake);
+    }
+  }
+
+  window.addEventListener('load', createSnowflakes);
+
+</script>
+</body>
+</html>

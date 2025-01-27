@@ -4,160 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wishlist DApp</title>
-    <script src="https://cdn.ethers.io/lib/ethers-5.2.min.js" type="application/javascript"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-        }
-        .wishlist-item {
-            background: #fff;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .wishlist-item h3 {
-            margin: 0;
-        }
-        .form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-        button:disabled {
-            background-color: gray;
-            cursor: not-allowed;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="snow-container"></div>
+
+<nav>
+    <a href="auth.html">Login / Register</a>
+    <a href="profile.html">Profile</a>
+    <a href="personalWishlist.html">Personal Wishlist</a>
+    <a href="groupWishlist.html">Group Wishlist</a>
+</nav>
+
 <div class="container">
-    <h1>Wishlist DApp</h1>
-
-    <div class="form">
-        <h2>Add Item</h2>
-        <input type="text" id="itemName" placeholder="Item Name" /><br /><br />
-        <input type="text" id="itemDescription" placeholder="Item Description" /><br /><br />
-        <button id="addItemButton">Add Item</button>
-    </div>
-
-    <div id="wishlist"></div>
+    <h1>Welcome to the Wishlist DApp</h1>
+    <p>Connect with your MetaMask wallet to get started!</p>
 </div>
 
 <script>
-    const contractAddress = "YOUR_CONTRACT_ADDRESS"; // Replace with your contract address
-    const abi = [
-        // Replace with your contract's ABI
-        {
-            "inputs": [
-                { "internalType": "string", "name": "_name", "type": "string" },
-                { "internalType": "string", "name": "_description", "type": "string" }
-            ],
-            "name": "addItem",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "viewWishlist",
-            "outputs": [
-                {
-                    "components": [
-                        { "internalType": "uint256", "name": "id", "type": "uint256" },
-                        { "internalType": "string", "name": "name", "type": "string" },
-                        { "internalType": "string", "name": "description", "type": "string" },
-                        { "internalType": "address", "name": "owner", "type": "address" },
-                        { "internalType": "bool", "name": "fulfilled", "type": "bool" }
-                    ],
-                    "internalType": "struct WishlistItem[]",
-                    "name": "",
-                    "type": "tuple[]"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
+    // Snowflakes script
+    function createSnowflakes() {
+        const snowContainer = document.querySelector('.snow-container');
+        const numSnowflakes = 50;
 
-    let provider, signer, contract;
-
-    async function connect() {
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
-        signer = provider.getSigner();
-        contract = new ethers.Contract(contractAddress, abi, signer);
-    }
-
-    async function addItem() {
-        const name = document.getElementById("itemName").value;
-        const description = document.getElementById("itemDescription").value;
-
-        if (!name || !description) {
-            alert("Please fill in all fields.");
-            return;
-        }
-
-        try {
-            const tx = await contract.addItem(name, description);
-            await tx.wait();
-            alert("Item added successfully!");
-            loadWishlist();
-        } catch (error) {
-            console.error(error);
-            alert("Error adding item.");
+        for (let i = 0; i < numSnowflakes; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 10 + 5 + 's';
+            snowContainer.appendChild(snowflake);
         }
     }
 
-    async function loadWishlist() {
-        try {
-            const items = await contract.viewWishlist();
-            const wishlistDiv = document.getElementById("wishlist");
-            wishlistDiv.innerHTML = "";
-            items.forEach(item => {
-                const div = document.createElement("div");
-                div.className = "wishlist-item";
-                div.innerHTML = `
-                        <h3>${item.name}</h3>
-                        <p>${item.description}</p>
-                        <p>Owner: ${item.owner}</p>
-                        <p>Status: ${item.fulfilled ? "Fulfilled" : "Pending"}</p>
-                    `;
-                wishlistDiv.appendChild(div);
-            });
-        } catch (error) {
-            console.error(error);
-            alert("Error loading wishlist.");
-        }
-    }
-
-    document.getElementById("addItemButton").addEventListener("click", addItem);
-
-    window.onload = async () => {
-        await connect();
-        await loadWishlist();
-    };
+    window.addEventListener('load', createSnowflakes);
 </script>
 </body>
 </html>
