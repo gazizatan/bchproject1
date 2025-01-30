@@ -162,7 +162,6 @@
 
         contract = new web3.eth.Contract(abi, contractAddress);
 
-        // ✅ Привязываем кнопки к обработчикам событий после успешной инициализации Web3
         document.getElementById('joinGroupBtn').addEventListener('click', joinGroup);
         document.getElementById('addGroupItemBtn').addEventListener('click', addItem);
 
