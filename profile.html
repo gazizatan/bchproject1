@@ -18,7 +18,7 @@
 
 <div class="container">
   <h1>Your Profile</h1>
-  <p><strong>Ethereum Address:</strong> <span id="address">0xYourAddressHere</span></p>
+  <p><strong>Ethereum Address:</strong> <span id="address">Connecting...</span></p>
 
   <h2>Your Wishlist</h2>
   <ul id="wishlist">
@@ -31,6 +31,28 @@
 
 <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
 <script>
+  async function connectWallet() {
+    if (window.ethereum) {
+      try {
+        const web3 = new Web3(window.ethereum);
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+
+        if (accounts.length > 0) {
+          document.getElementById("address").innerText = accounts[0];
+        } else {
+          document.getElementById("address").innerText = "No account found";
+        }
+      } catch (error) {
+        console.error("Error connecting to MetaMask:", error);
+        document.getElementById("address").innerText = "Error connecting";
+      }
+    } else {
+      document.getElementById("address").innerText = "MetaMask not installed";
+    }
+  }
+
+  window.addEventListener("load", connectWallet);
+
   // Snowflakes script
   function createSnowflakes() {
     const snowContainer = document.querySelector('.snow-container');
@@ -46,7 +68,6 @@
   }
 
   window.addEventListener('load', createSnowflakes);
-
 </script>
 </body>
 </html>

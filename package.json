@@ -9,11 +9,14 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "ethers": "^6.13.5",
     "express": "^4.21.2",
     "web3": "^4.16.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "ethers": "^6.13.5",
+    "hardhat": "^2.22.18"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gazizatan/bchproject1.git"

@@ -1,6 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+contract PersonalWishlist {
+    mapping(address => string[]) private wishlists;
+
+    event ItemAdded(address indexed user, string item);
+
+    function addItem(string memory item) public {
+        wishlists[msg.sender].push(item);
+        emit ItemAdded(msg.sender, item);
+    }
+
+    function getWishlist() public view returns (string[] memory) {
+        return wishlists[msg.sender];
+    }
+}
+
 contract GroupWishlist {
     address public owner;
     mapping(address => bool) public groupMembers;

@@ -46,10 +46,13 @@ button {
     background: #9370db;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 15px 30px;
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s ease;
+    width: 80%; /* Buttons now take up most of the container width */
+    max-width: 250px; /* Maximum width for the buttons */
+    margin: 10px 0; /* Margin for spacing between buttons */
 }
 
 button:hover {

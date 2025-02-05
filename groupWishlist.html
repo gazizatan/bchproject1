@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="snow-container"></div>
 
 <nav>
   <a href="Main.html">Home</a>
@@ -17,6 +16,11 @@
 
 <div class="container">
   <h1>Your Group Wishlist</h1>
+
+  <label for="groupAddress">Group Address:</label>
+  <input type="text" id="groupAddress" placeholder="Enter group contract address">
+  <button id="connectGroupBtn">Connect to Group</button>
+  <button id="createGroupBtn">Create New Group</button>
   <button id="joinGroupBtn">Join Group</button>
   <button id="addGroupItemBtn">Add Group Item</button>
 
@@ -26,239 +30,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
-<script>
-  let web3, accounts, contract;
-
-  const contractAddress = '0x5b330Be0CBD28f756042129e2fF291244Bc052a4';
-  const abi = [
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "member",
-				"type": "address"
-			}
-		],
-		"name": "GroupJoined",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "item",
-				"type": "string"
-			}
-		],
-		"name": "ItemAdded",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "item",
-				"type": "string"
-			}
-		],
-		"name": "addItem",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getWishlist",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "item",
-						"type": "string"
-					}
-				],
-				"internalType": "struct GroupWishlist.WishlistItem[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "groupMembers",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "joinGroup",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "wishlist",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "item",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
-];
-
-  async function initWeb3() {
-    if (window.ethereum) {
-      try {
-        web3 = new Web3(window.ethereum);
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-
-        accounts = await web3.eth.getAccounts();
-        if (accounts.length === 0) {
-          alert('No accounts found. Please connect your MetaMask wallet.');
-          return;
-        }
-
-        contract = new web3.eth.Contract(abi, contractAddress);
-
-        document.getElementById('joinGroupBtn').addEventListener('click', joinGroup);
-        document.getElementById('addGroupItemBtn').addEventListener('click', addItem);
-
-      } catch (error) {
-        console.error('Error initializing Web3:', error);
-        alert('Failed to initialize Web3. Please check your MetaMask connection.');
-      }
-    } else {
-      alert('MetaMask is not installed. Please install it and reload the page.');
-    }
-  }
-
-  async function joinGroup() {
-    if (!contract) {
-      alert('Contract is not initialized. Please reload the page.');
-      return;
-    }
-
-    try {
-      await contract.methods.joinGroup().send({ from: accounts[0] });
-      alert('You have successfully joined the group!');
-    } catch (error) {
-      console.error('Error joining group:', error);
-      alert('Error joining group.');
-    }
-  }
-
-  async function addItem() {
-    if (!contract) {
-      alert('Contract is not initialized. Please reload the page.');
-      return;
-    }
-
-    const item = prompt('Enter the item to add to the group wishlist:');
-    if (item) {
-      try {
-        await contract.methods.addItem(item).send({ from: accounts[0] });
-        alert('Item added to the wishlist!');
-        updateWishlist();
-      } catch (error) {
-        console.error('Error adding item:', error);
-        alert('Error adding item.');
-      }
-    }
-  }
-
-  async function updateWishlist() {
-    if (!contract) {
-      alert('Contract is not initialized. Please reload the page.');
-      return;
-    }
-
-    try {
-      const wishlist = await contract.methods.getWishlist().call();
-      const wishlistElement = document.getElementById('groupWishlist');
-      wishlistElement.innerHTML = '';
-      wishlist.forEach(item => {
-        const listItem = document.createElement('li');
-        listItem.textContent = item;
-        wishlistElement.appendChild(listItem);
-      });
-    } catch (error) {
-      console.error('Error fetching wishlist:', error);
-    }
-  }
-
-  window.addEventListener('load', async () => {
-    await initWeb3();
-    if (contract) {
-      updateWishlist();
-    }
-  });
-</script>
-
+<script src="scripts.js"></script>
 
 </body>
 </html>
