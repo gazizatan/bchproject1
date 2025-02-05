@@ -29,8 +29,45 @@
 <script>
   let web3, accounts, contract;
 
-  const contractAddress = '0xB7c7eB4A62F1938F6B588D37398db1D6A88EF233';
+  const contractAddress = '0x5b330Be0CBD28f756042129e2fF291244Bc052a4';
   const abi = [
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "member",
+				"type": "address"
+			}
+		],
+		"name": "GroupJoined",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "item",
+				"type": "string"
+			}
+		],
+		"name": "ItemAdded",
+		"type": "event"
+	},
 	{
 		"inputs": [
 			{
@@ -46,50 +83,24 @@
 	},
 	{
 		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "member",
-				"type": "address"
-			}
-		],
-		"name": "GroupJoined",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "item",
-				"type": "string"
-			}
-		],
-		"name": "ItemAdded",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "joinGroup",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "getWishlist",
 		"outputs": [
 			{
-				"internalType": "string[]",
+				"components": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "item",
+						"type": "string"
+					}
+				],
+				"internalType": "struct GroupWishlist.WishlistItem[]",
 				"name": "",
-				"type": "string[]"
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -116,6 +127,13 @@
 	},
 	{
 		"inputs": [],
+		"name": "joinGroup",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "owner",
 		"outputs": [
 			{
@@ -138,8 +156,13 @@
 		"name": "wishlist",
 		"outputs": [
 			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
 				"internalType": "string",
-				"name": "",
+				"name": "item",
 				"type": "string"
 			}
 		],
